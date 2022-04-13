@@ -5,6 +5,7 @@ import { ContactForm } from './contactForm/ContactForm';
 import { Filter } from './filter/Filter';
 import { ContactList } from './contactList/ContactList';
 
+const LS_KEY = 'contacts';
 export class App extends Component {
   state = {
     contacts: [
@@ -15,6 +16,20 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const savesContacts = JSON.parse(localStorage.getItem(LS_KEY));
+    if (savesContacts !== null) {
+      this.setState({ contacts: savesContacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+      console.log(localStorage.getItem('contacts'));
+    }
+  }
 
   handleSubmit = (values, { resetForm }) => {
     if (
